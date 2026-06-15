@@ -140,20 +140,21 @@ def verify():
 def health():
     return jsonify({"status": "healthy", "model": MODEL_NAME})
 
-if __name__ == '__main__':
-    # Warm up model so it is cached in memory
-    print(f"Preloading DeepFace model: {MODEL_NAME}...")
-    try:
-        # Create a dummy 100x100 image for warm up
-        dummy_data = np.zeros((100, 100, 3), dtype=np.uint8)
-        import cv2
-        dummy_path = os.path.join(TEMP_DIR, "warmup.jpg")
-        cv2.imwrite(dummy_path, dummy_data)
-        DeepFace.represent(img_path=dummy_path, model_name=MODEL_NAME, enforce_detection=False)
+# Warm up model so it is cached in memory during startup
+print(f"Preloading DeepFace model: {MODEL_NAME}...")
+try:
+    # Create a dummy 100x100 image for warm up
+    dummy_data = np.zeros((100, 100, 3), dtype=np.uint8)
+    import cv2
+    dummy_path = os.path.join(TEMP_DIR, "warmup.jpg")
+    cv2.imwrite(dummy_path, dummy_data)
+    DeepFace.represent(img_path=dummy_path, model_name=MODEL_NAME, enforce_detection=False)
+    if os.path.exists(dummy_path):
         os.remove(dummy_path)
-        print("Model preloaded successfully!")
-    except Exception as e:
-        print(f"Warning: Model preload failed: {e}")
+    print("Model preloaded successfully!")
+except Exception as e:
+    print(f"Warning: Model preload failed: {e}")
 
+if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port, debug=False)
