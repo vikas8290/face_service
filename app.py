@@ -1,4 +1,10 @@
 import os
+
+# Set DEEPFACE_HOME to current directory before importing DeepFace
+project_dir = os.path.dirname(os.path.abspath(__file__))
+if "DEEPFACE_HOME" not in os.environ:
+    os.environ["DEEPFACE_HOME"] = project_dir
+
 import base64
 import numpy as np
 from flask import Flask, request, jsonify
@@ -53,6 +59,9 @@ def represent():
 
         # DeepFace returns a list of dicts. We take the first face detected.
         first_face = embeddings[0]
+        if not isinstance(first_face, dict):
+            return jsonify({"success": False, "message": "Unexpected response format from DeepFace"}), 500
+
         embedding = first_face["embedding"]
         facial_area = first_face["facial_area"]
 

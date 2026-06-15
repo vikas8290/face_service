@@ -1,0 +1,27 @@
+import os
+import sys
+
+# Set DEEPFACE_HOME to current directory before importing DeepFace
+project_dir = os.path.dirname(os.path.abspath(__file__))
+os.environ["DEEPFACE_HOME"] = project_dir
+
+import numpy as np
+import cv2
+from deepface import DeepFace
+
+print("Downloading/preloading DeepFace model weights during build time...")
+# Create a dummy 100x100 image for warmup/download
+dummy_data = np.zeros((100, 100, 3), dtype=np.uint8)
+temp_path = os.path.join(project_dir, "warmup_build.jpg")
+cv2.imwrite(temp_path, dummy_data)
+
+try:
+    # This will trigger the download and validation of model weights
+    DeepFace.represent(img_path=temp_path, model_name="Facenet", enforce_detection=False)
+    print("Model weights preloaded and cached successfully!")
+except Exception as e:
+    print(f"Error downloading/preloading model weights: {e}", file=sys.stderr)
+    sys.exit(1)
+finally:
+    if os.path.exists(temp_path):
+        os.remove(temp_path)

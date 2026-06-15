@@ -3,8 +3,10 @@ services:
     name: face-service
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python download_weights.py
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
+      - key: DEEPFACE_HOME
+        value: /opt/render/project/src
