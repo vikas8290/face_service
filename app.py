@@ -1,5 +1,14 @@
 import os
 
+# Set threading limits to reduce memory footprint on CPU-only environments
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["TF_NUM_INTRAOP_THREADS"] = "1"
+os.environ["TF_NUM_INTEROP_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 # Set DEEPFACE_HOME to current directory before importing DeepFace
 project_dir = os.path.dirname(os.path.abspath(__file__))
 if "DEEPFACE_HOME" not in os.environ:
@@ -163,6 +172,9 @@ try:
     print("Model preloaded successfully!")
 except Exception as e:
     print(f"Warning: Model preload failed: {e}")
+finally:
+    import gc
+    gc.collect()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))

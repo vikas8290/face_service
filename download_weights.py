@@ -1,6 +1,15 @@
 import os
 import sys
 
+# Set threading limits to reduce memory footprint on CPU-only environments
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["TF_NUM_INTRAOP_THREADS"] = "1"
+os.environ["TF_NUM_INTEROP_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 # Set DEEPFACE_HOME to current directory before importing DeepFace if not set
 project_dir = os.path.dirname(os.path.abspath(__file__))
 if "DEEPFACE_HOME" not in os.environ:
@@ -26,3 +35,5 @@ except Exception as e:
 finally:
     if os.path.exists(temp_path):
         os.remove(temp_path)
+    import gc
+    gc.collect()
