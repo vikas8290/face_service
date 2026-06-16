@@ -9,4 +9,4 @@ services:
       - key: PYTHON_VERSION
         value: 3.9.18
       - key: DEEPFACE_HOME
-        value: /opt/render/project/src
+        value: /opt/render/project/src/.venv

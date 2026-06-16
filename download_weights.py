@@ -1,9 +1,10 @@
 import os
 import sys
 
-# Set DEEPFACE_HOME to current directory before importing DeepFace
+# Set DEEPFACE_HOME to current directory before importing DeepFace if not set
 project_dir = os.path.dirname(os.path.abspath(__file__))
-os.environ["DEEPFACE_HOME"] = project_dir
+if "DEEPFACE_HOME" not in os.environ:
+    os.environ["DEEPFACE_HOME"] = project_dir
 
 import numpy as np
 import cv2
