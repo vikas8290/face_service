@@ -1,24 +1,9 @@
 import os
 import sys
 
-# Set threading limits to reduce memory footprint on CPU-only environments
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["TF_NUM_INTRAOP_THREADS"] = "1"
-os.environ["TF_NUM_INTEROP_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-
-# Set DEEPFACE_HOME. On Render/Railway, force it to .venv to persist cached weights.
-if os.environ.get("RENDER") == "true":
-    os.environ["DEEPFACE_HOME"] = "/opt/render/project/src/.venv"
-elif "RAILWAY_PROJECT_ID" in os.environ:
-    os.environ["DEEPFACE_HOME"] = "/app/.venv"
-else:
-    project_dir = os.path.dirname(os.path.abspath(__file__))
-    if "DEEPFACE_HOME" not in os.environ:
-        os.environ["DEEPFACE_HOME"] = project_dir
+# Set DEEPFACE_HOME to current directory before importing DeepFace
+project_dir = os.path.dirname(os.path.abspath(__file__))
+os.environ["DEEPFACE_HOME"] = project_dir
 
 import numpy as np
 import cv2
@@ -40,5 +25,3 @@ except Exception as e:
 finally:
     if os.path.exists(temp_path):
         os.remove(temp_path)
-    import gc
-    gc.collect()
