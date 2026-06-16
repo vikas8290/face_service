@@ -1,2 +1,3 @@
 [phases.setup]
-aptPkgs = ["...", "libgl1", "libglib2.0-0", "libxcb1", "libxrender1", "libxext6", "libsm6", "libice6"]
+nixPkgs = ["...", "libGL", "glib", "xorg.libxcb", "xorg.libX11", "xorg.libXext", "xorg.libXrender", "xorg.libSM", "xorg.libICE"]
+nixLibs = ["...", "libGL", "glib", "xorg.libxcb", "xorg.libX11", "xorg.libXext", "xorg.libXrender", "xorg.libSM", "xorg.libICE"]
