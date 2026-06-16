@@ -9,10 +9,13 @@ os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
-# Set DEEPFACE_HOME to current directory before importing DeepFace
-project_dir = os.path.dirname(os.path.abspath(__file__))
-if "DEEPFACE_HOME" not in os.environ:
-    os.environ["DEEPFACE_HOME"] = project_dir
+# Set DEEPFACE_HOME. On Render, force it to .venv to persist cached weights.
+if os.environ.get("RENDER") == "true":
+    os.environ["DEEPFACE_HOME"] = "/opt/render/project/src/.venv"
+else:
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    if "DEEPFACE_HOME" not in os.environ:
+        os.environ["DEEPFACE_HOME"] = project_dir
 
 import base64
 import numpy as np
